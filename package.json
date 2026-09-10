@@ -9,7 +9,7 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "preview": "vite preview",
-    "deploy": "npm run build && wrangler pages deploy dist"
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@vitejs/plugin-react": "4.3.1",

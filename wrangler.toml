@@ -1,3 +1,7 @@
 name = "personal-homepage"
 compatibility_date = "2026-09-10"
-pages_build_output_dir = "dist"
+
+# 纯静态站点，没有服务端代码。Cloudflare Workers Static Assets 直接托管 dist/。
+# _headers 和 _redirects 由 Vite 从 public/ 复制进 dist/，Workers 会读取它们。
+[assets]
+directory = "./dist"
