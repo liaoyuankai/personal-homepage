@@ -4,7 +4,7 @@ export default function NowSection({ activities }: { activities: Activity[] }) {
   return (
     <section id="now">
       <p className="eyebrow">02 / 最近在活</p>
-      <h2>最近的小宇宙</h2>
+      <h2>最近都在干这些。</h2>
       <div className="cards">
         {activities.map((activity) => (
           <article data-testid="activity-card" key={`${activity.date}-${activity.title}`}>

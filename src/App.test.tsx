@@ -34,3 +34,15 @@ it('shows the murder-mystery role cards', () => {
   render(<App />);
   expect(screen.getAllByTestId('role-card').length).toBeGreaterThanOrEqual(2);
 });
+
+it('sends the hero button to the universe section, not the archive', () => {
+  render(<App />);
+  const cta = screen.getByRole('link', { name: /进入我的小宇宙/ });
+  expect(cta).toHaveAttribute('href', '#universe');
+});
+
+it('does not reuse 小宇宙 as the recent-activity heading', () => {
+  render(<App />);
+  const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent ?? '');
+  expect(headings.filter((t) => t.includes('小宇宙'))).toHaveLength(0);
+});

@@ -6,8 +6,14 @@ workers_dev = true
 
 # 纯静态站点，没有服务端代码。Cloudflare Workers Static Assets 直接托管 dist/。
 # _headers 和 _redirects 由 Vite 从 public/ 复制进 dist/，Workers 会读取它们。
+# 入口脚本只负责 www -> 根域名的跳转，静态资源仍由平台直接服务。
+main = "worker/index.js"
+
 [assets]
 directory = "./dist"
+binding = "ASSETS"
+# 每个请求先过入口脚本，否则 / 会直接命中 index.html，跳转逻辑跑不到。
+run_worker_first = true
 
 # 自定义域名。前提是 Cloudflare DNS 里这两个主机名没有已存在的 A / CNAME 记录，
 # 否则 Cloudflare 会拒绝创建（错误码 100117），需要先在 DNS 面板删掉旧记录。

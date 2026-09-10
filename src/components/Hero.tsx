@@ -18,7 +18,7 @@ export default function Hero() {
           Very alive.
         </h1>
         <p className="identity">{identityLine}</p>
-        <a className="button" href="#archive">
+        <a className="button" href="#universe">
           进入我的小宇宙 ↗
         </a>
       </div>
