@@ -1,7 +1,21 @@
 name = "personal-homepage"
 compatibility_date = "2026-09-10"
 
+# 保留 *.workers.dev 备用地址。加了 routes 之后它默认会被关闭，必须显式打开。
+workers_dev = true
+
 # 纯静态站点，没有服务端代码。Cloudflare Workers Static Assets 直接托管 dist/。
 # _headers 和 _redirects 由 Vite 从 public/ 复制进 dist/，Workers 会读取它们。
 [assets]
 directory = "./dist"
+
+# 自定义域名。前提是 Cloudflare DNS 里这两个主机名没有已存在的 A / CNAME 记录，
+# 否则 Cloudflare 会拒绝创建（错误码 100117），需要先在 DNS 面板删掉旧记录。
+# 记录删干净后，wrangler deploy 会自动建好解析并签发证书。
+[[routes]]
+pattern = "liaoyuankai.com"
+custom_domain = true
+
+[[routes]]
+pattern = "www.liaoyuankai.com"
+custom_domain = true
