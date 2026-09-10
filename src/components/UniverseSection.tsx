@@ -16,20 +16,27 @@ export default function UniverseSection({
       <p className="eyebrow">03 / 小宇宙</p>
       <h2>歌单和角色卡</h2>
       <div className="cards">
-        <article>
+        <article data-tone="plain">
+          <small className="meta">PLAYLIST</small>
           <h3>歌单</h3>
           <p>{blurb}</p>
           {usableLinks.map((link) => (
-            <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+            <a
+              className="button button--ghost"
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+            >
               {link.label} ↗
             </a>
           ))}
         </article>
         {roleCards.map((role) => (
-          <article data-testid="role-card" key={role.name}>
-            <small>{role.faction}</small>
+          <article data-testid="role-card" data-tone={role.tone ?? 'plain'} key={role.name}>
+            <small className="meta">{role.faction}</small>
             <h3>{role.name}</h3>
-            <p>“{role.quote}”</p>
+            <p className="quote">“{role.quote}”</p>
           </article>
         ))}
       </div>

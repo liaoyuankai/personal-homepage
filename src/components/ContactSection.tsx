@@ -14,8 +14,12 @@ export default function ContactSection({
       <p className="eyebrow">04 / SAY HI</p>
       <h2>{headline}</h2>
       <div className="tags">
-        {usableLinks.map((link) => (
-          <a className="button" key={link.href} href={link.href}>
+        {usableLinks.map((link, index) => (
+          <a
+            className={`button ${index === 0 ? 'button--primary' : 'button--ghost'}`}
+            key={link.href}
+            href={link.href}
+          >
             {link.label} ↗
           </a>
         ))}

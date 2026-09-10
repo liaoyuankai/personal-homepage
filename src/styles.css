@@ -1,4 +1,9 @@
-/* ---------- tokens ---------- */
+/* ============================================================
+   怪趣档案馆 · 样式表
+   分四层：tokens / 排版 / 版式与组件 / 动效与断点
+   ============================================================ */
+
+/* ---------- 1. tokens ---------- */
 :root {
   --lavender: #d8d7ff;
   --pink: #ff477e;
@@ -6,7 +11,27 @@
   --lime: #caff1b;
   --ink: #171717;
 
-  font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  /* 三档描边。同一根 2px 黑框用在所有地方会让层次消失。 */
+  --rule-strong: 2px solid var(--ink);
+  --rule-hair: 1px solid rgba(23, 23, 23, 0.2);
+  --rule-cut: 1px dashed rgba(23, 23, 23, 0.32);
+
+  /* 三档阴影，跟着描边走。 */
+  --shadow-hard: 6px 6px 0 var(--ink);
+  --shadow-lift: 9px 9px 0 var(--ink);
+  --shadow-soft: 2px 2px 0 rgba(23, 23, 23, 0.14);
+
+  --dur: 160ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* 中文单独指定字体栈。交给系统兜底会落到微软雅黑，
+     字重偏粗、字面偏大，和旁边的 Georgia 斜体不是一个气质。 */
+  --font-latin: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --font-cjk: "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans SC",
+    "Microsoft YaHei", sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+
+  font-family: var(--font-latin), var(--font-cjk);
   color: var(--ink);
   background: var(--cream);
 }
@@ -19,7 +44,108 @@ body {
   margin: 0;
 }
 
-/* ---------- mobile-first shell ---------- */
+/* 极淡的纸面噪点。没有它，荧光粉和荧光绿看起来像默认色块而不是印物。 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- 2. 排版 ---------- */
+h1 {
+  font-size: clamp(50px, 15vw, 112px);
+  line-height: 0.82;
+  letter-spacing: -0.055em;
+  margin: 20px 0 22px;
+}
+
+h1 i {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+/* 中文没有西文的升降部，行高 1.05 会挤成一坨；负字距则要补上。 */
+h2 {
+  font-family: var(--font-cjk), var(--font-latin);
+  word-break: keep-all;
+  text-wrap: pretty;
+  font-size: clamp(26px, 6vw, 44px);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  max-width: 16em;
+  margin: 10px 0 26px;
+}
+
+h3 {
+  font-family: var(--font-cjk), var(--font-latin);
+  font-size: 19px;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  margin: 6px 0 8px;
+}
+
+p {
+  line-height: 1.75;
+  max-width: 34em; /* 中文一行超过三十几字就开始跳行 */
+}
+
+/* 章节序号。右侧那根细线是杂志里最省事的层次手段。 */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: none;
+  margin: 0;
+  font-family: var(--font-latin);
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.16em;
+}
+
+.eyebrow::after {
+  content: "";
+  flex: 1;
+  border-top: var(--rule-hair);
+}
+
+/* 日期、分类、阵营这类次级信息统一压低。 */
+.meta {
+  display: inline-block;
+  font-family: var(--font-latin);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.meta--on-pink {
+  opacity: 0.75;
+}
+
+/* 主标题和身份行之间原本是断崖，这里补一层。 */
+.identity {
+  font-family: var(--font-cjk), var(--font-latin);
+  word-break: keep-all;
+  font-size: 17px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  border-left: 3px solid var(--pink);
+  padding-left: 13px;
+  margin: 0 0 26px;
+}
+
+.quote {
+  font-family: var(--font-serif), "Songti SC", "SimSun", serif;
+  font-size: 15px;
+  opacity: 0.82;
+}
+
+/* ---------- 3. 版式与组件 ---------- */
 main {
   max-width: 1100px;
   margin: 0 auto;
@@ -31,8 +157,14 @@ nav {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: var(--rule-strong);
   padding-bottom: 12px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+nav b {
+  letter-spacing: 0.08em;
 }
 
 nav span,
@@ -40,6 +172,17 @@ nav span,
   display: flex;
   gap: 9px;
   flex-wrap: wrap;
+}
+
+nav a {
+  padding: 0 4px;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+nav a:hover {
+  border-bottom-color: var(--pink);
 }
 
 a,
@@ -57,166 +200,286 @@ button {
 a:focus-visible,
 button:focus-visible {
   outline: 3px solid var(--pink);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
+/* 分节线用裁切虚线，把 2px 实线留给真正重要的元素。 */
 section,
 footer {
-  padding: 55px 0;
-  border-bottom: 2px solid var(--ink);
+  padding: 52px 0;
+  border-bottom: var(--rule-cut);
 }
 
 footer {
   border-bottom: 0;
+  padding-bottom: 72px;
 }
 
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  font-weight: bold;
-  margin: 0;
-}
-
-h1 {
-  font-size: clamp(52px, 16vw, 120px);
-  line-height: 0.78;
-  letter-spacing: -0.09em;
-  margin: 18px 0;
-}
-
-h1 i {
-  font-family: Georgia, "Times New Roman", serif;
-}
-
-h2 {
-  font-size: clamp(28px, 7vw, 54px);
-  line-height: 1.05;
-}
-
-h3 {
-  font-size: 20px;
-  margin: 8px 0;
-}
-
-p {
-  line-height: 1.6;
-}
-
-.identity {
-  font-weight: bold;
-}
-
-/* ---------- hero ---------- */
+/* --- 首屏 --- */
 .hero {
   border: 0;
   display: grid;
-  gap: 32px;
-  align-items: center;
+  gap: 34px;
+  align-items: start;
+  padding: 38px 0 66px;
 }
 
 .profile-card {
+  position: relative;
   background: var(--pink);
-  border: 2px solid var(--ink);
-  padding: 16px;
-  min-height: 260px;
-  transform: rotate(3deg);
-  box-shadow: 8px 8px 0 var(--ink);
-  animation: float 4s ease-in-out infinite;
+  border: var(--rule-strong);
+  padding: 18px;
+  box-shadow: var(--shadow-hard);
+  transform: rotate(2.5deg);
+  animation: float 5s ease-in-out infinite;
+}
+
+/* 半调网点。纯色平涂缺的就是这层印刷痕迹。 */
+.profile-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(23, 23, 23, 0.2) 1px, transparent 1.15px);
+  background-size: 7px 7px;
+  mix-blend-mode: multiply;
+}
+
+/* 顶边那截胶带。 */
+.profile-card::after {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 98px;
+  height: 26px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: rgba(255, 249, 240, 0.5);
+  border: var(--rule-cut);
+}
+
+.profile-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-card__photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: var(--rule-strong);
+  margin: 12px 0;
+}
+
+.profile-card__placeholder {
+  margin: 14px 0;
+}
+
+.swatches {
+  display: flex;
+  gap: 6px;
+}
+
+.swatches span {
+  flex: 1;
+  height: 26px;
+  border: var(--rule-strong);
 }
 
 .star {
   text-align: center;
-  font-size: 110px;
+  font-size: 96px;
   line-height: 1;
-  padding: 24px;
+  padding: 18px 0 6px;
 }
 
 .facts {
   display: flex;
   flex-direction: column;
-  margin: 0 0 12px;
+  font-family: var(--font-latin);
+  font-size: 13px;
+  line-height: 1.9;
+  margin: 0 0 10px;
 }
 
 .profile-card b {
   font-size: 12px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
 }
 
-/* ---------- buttons and cards ---------- */
-.button,
-button {
-  padding: 9px 13px;
-  border: 2px solid var(--ink);
-  background: var(--lime);
+/* --- 按钮分主次 --- */
+.button {
+  padding: 10px 15px;
   font-weight: bold;
   text-decoration: none;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    background var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 
+.button--primary {
+  background: var(--lime);
+  border: var(--rule-strong);
+  box-shadow: var(--shadow-hard);
+}
+
+.button--primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.button--primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.button--ghost {
+  background: transparent;
+  border: var(--rule-hair);
+  margin-top: 10px;
+}
+
+.button--ghost:hover {
+  border-color: var(--ink);
+  background: rgba(255, 255, 255, 0.65);
+  transform: translate(-1px, -1px);
+}
+
+/* --- 兴趣标签 --- */
+.tags button {
+  padding: 9px 14px;
+  font-weight: bold;
+  background: #fff;
+  border: var(--rule-hair);
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.tags button:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+}
+
+/* 选中的标签歪一点，对应设计文档里的“旋转标签”。 */
 .tags button[aria-pressed="true"] {
   background: var(--pink);
   color: var(--cream);
+  border: var(--rule-strong);
+  box-shadow: var(--shadow-hard);
+  transform: rotate(-2deg);
 }
 
+/* --- 档案说明：左侧做成活页夹打孔 --- */
 .description {
+  position: relative;
   background: var(--lavender);
-  border: 2px solid var(--ink);
-  padding: 16px;
+  border: var(--rule-strong);
+  box-shadow: var(--shadow-hard);
+  padding: 20px 22px 20px 36px;
+  margin-top: 18px;
+  max-width: 40em;
 }
 
+.description::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  bottom: 14px;
+  border-left: var(--rule-cut);
+}
+
+/* --- 卡片：配色跟着内容性质走，不跟着排第几个走 --- */
 .cards {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .cards article {
-  border: 2px solid var(--ink);
   background: #fff;
-  padding: 17px;
+  border: var(--rule-hair);
+  box-shadow: var(--shadow-soft);
+  padding: 18px 18px 20px;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 
-.cards article:nth-child(2) {
+.cards article[data-tone="lavender"] {
   background: var(--lavender);
+  border: var(--rule-strong);
+  box-shadow: var(--shadow-hard);
 }
 
-.cards article a {
-  margin-top: 8px;
-  padding: 9px 13px;
-  border: 2px solid var(--ink);
+.cards article[data-tone="pink"] {
+  background: var(--pink);
+  border: var(--rule-strong);
+  box-shadow: var(--shadow-hard);
+}
+
+.cards article[data-tone="lime"] {
   background: var(--lime);
-  font-weight: bold;
-  text-decoration: none;
+  border: var(--rule-strong);
+  box-shadow: var(--shadow-hard);
 }
 
-/* ---------- motion ---------- */
+.cards article:hover {
+  transform: translate(-2px, -2px);
+}
+
+.cards article[data-tone="plain"]:hover {
+  box-shadow: 5px 5px 0 rgba(23, 23, 23, 0.85);
+}
+
+.cards article:not([data-tone="plain"]):hover {
+  box-shadow: var(--shadow-lift);
+}
+
+/* ---------- 4. 动效与断点 ---------- */
 @keyframes float {
   50% {
-    transform: rotate(-2deg) translateY(-8px);
+    transform: rotate(-1.5deg) translateY(-7px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
+
+  .cards article:hover,
+  .button:hover,
+  .tags button:hover {
+    transform: none;
+  }
 }
 
-/* ---------- desktop magazine layout ---------- */
 @media (min-width: 768px) {
   main {
     padding: 28px;
-  }
-
-  .hero {
-    grid-template-columns: 1.5fr 1fr;
-    min-height: 590px;
   }
 
   .cards {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .cards article:nth-child(even) {
-    transform: rotate(-1.5deg);
+  /* 错位只给重点卡，全都歪等于都不歪。 */
+  .cards article:not([data-tone="plain"]) {
+    transform: rotate(-1.2deg);
+  }
+
+  .cards article:not([data-tone="plain"]):hover {
+    transform: rotate(-1.2deg) translate(-2px, -2px);
+  }
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1.35fr 0.95fr;
+    gap: 52px;
+    align-items: center;
+    padding: 56px 0 88px;
   }
 }
