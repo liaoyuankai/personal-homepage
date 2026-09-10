@@ -48,22 +48,29 @@ npm run deploy              # 构建 + 上传 dist/
 
 以后每次改完内容，跑一遍 `npm run deploy` 就上线了。
 
-当前线上地址：<https://personal-homepage.xzqzllyk.workers.dev>
+线上地址：<https://liaoyuankai.com>（备用 <https://personal-homepage.xzqzllyk.workers.dev>）
 
 `public/_headers` 里的安全响应头和静态资源长缓存会被 Workers 自动读取，不需要额外配置。
 
-## 绑定你的域名
+## 域名
 
-域名的 DNS 已经在 Cloudflare，所以不需要手动加解析记录：
+`liaoyuankai.com` 和 `www.liaoyuankai.com` 已经绑定，配置写在 `wrangler.toml` 的 `routes` 里，每次 `npm run deploy` 会一并同步。
 
-1. Cloudflare 控制台 → **Workers & Pages** → 选中 `personal-homepage`。
-2. **Settings** → **Domains & Routes** → **Add** → **Custom domain**。
-3. 填你的域名。根域名填 `example.com`，二级域名填 `me.example.com` 都可以。
-4. 点确认。Cloudflare 会自动加好 DNS 记录并签发证书。
+有两个坑值得记下来。
 
-证书通常几分钟内生效，最长等 15 分钟。生效前访问可能报 SSL 错误，属正常现象。
+**一、加了 `routes` 会关掉 workers.dev 备用地址。** 所以配置里必须显式写 `workers_dev = true`，否则备用地址会静默 404。
 
-想让根域名和 `www` 都能访问，就把两个都添加一遍。
+**二、主机名上有已存在的 A / CNAME 记录时，Cloudflare 拒绝绑定。** 报错是 `Hostname ... already has externally managed DNS records`，错误码 100117，API 的 `override_existing_dns_record` 参数也绕不过去。必须先在 DNS 面板删掉旧记录，再跑部署，wrangler 会自动建解析并签发证书。
+
+这个域名原先指向 Squarespace，绑定前删掉了 4 条 apex A 记录和 www 的 CNAME。**Google Workspace 邮箱的 MX、SPF、DKIM、DMARC 四条记录必须保留**，它们和网站解析是两套，删掉会导致域名邮箱收不到信。
+
+以后要再加子域名，在 `wrangler.toml` 里追加一段就行：
+
+```toml
+[[routes]]
+pattern = "blog.liaoyuankai.com"
+custom_domain = true
+```
 
 ## 不在范围内
 
