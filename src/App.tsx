@@ -8,10 +8,8 @@ export default function App() {
     <main>
       <nav aria-label="主页导航"><b>YOUR.NAME</b><span><a href="#archive">档案</a><a href="#now">现在</a><a href="#contact">打招呼</a></span></nav>
       <section className="hero">
-        <p className="eyebrow">PERSONAL FILE / 2026</p>
-        <h1>A little<br/><i>chaotic.</i><br/>Very alive.</h1>
-        <p>计算机研二 / 实习中 / 歌房麦霸 / 剧本杀玩家</p>
-        <a className="button" href="#archive">进入我的小宇宙 ↗</a>
+        <div><p className="eyebrow">PERSONAL FILE / 2026</p><h1>A little<br/><i>chaotic.</i><br/>Very alive.</h1><p>计算机研二 / 实习中 / 歌房麦霸 / 剧本杀玩家</p><a className="button" href="#archive">进入我的小宇宙 ↗</a></div>
+        <aside className="profile-card" aria-label="个人档案卡"><small>PERSONAL FILE</small><div className="star">✦</div><p>hair: bold<br/>mood: open<br/>weekend: mystery</p><b>NOT JUST A DEV.</b></aside>
       </section>
       <section id="archive"><p className="eyebrow">01 / 我的档案</p><h2>我不止一种打开方式。</h2><div className="tags">{interests.map(([n],i)=><button aria-pressed={i===active} onClick={()=>setActive(i)} key={n}>{n}</button>)}</div><p className="description">{interests[active][0]}说明：{interests[active][1]}</p></section>
       <section id="now"><p className="eyebrow">02 / 最近在活</p><h2>最近的小宇宙</h2><div className="cards">{activities.map(a=><article data-testid="activity-card" key={a[0]}><small>{a[0]} · {a[1]}</small><h3>{a[2]}</h3><p>{a[3]}</p></article>)}</div></section>
